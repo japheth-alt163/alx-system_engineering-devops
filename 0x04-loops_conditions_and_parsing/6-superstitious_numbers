@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# This script displays numbers and corresponding messages for specific iterations using the case statement
+
+counter=1
+
+while [ $counter -le 20 ]
+do
+    case $counter in
+        4)
+            echo $counter
+            echo "bad luck from China"
+            ;;
+        9)
+            echo $counter
+            echo "bad luck from Japan"
+            ;;
+        17)
+            echo $counter
+            echo "bad luck from Italy"
+            ;;
+        *)
+            echo $counter
+            ;;
+    esac
+    ((counter++))
+done
