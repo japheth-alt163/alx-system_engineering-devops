@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Run the 7-highlander script
+./7-highlander &
+
+# Capture the PID of the background process
+pid=$!
+
+# Wait for user input to stop the process
+read -p "Press Enter to stop the process..."
+
+# Use pkill to send a SIGTERM signal to the 7-highlander process
+pkill -TERM -P "$pid"

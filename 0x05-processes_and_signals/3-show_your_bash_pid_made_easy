@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Find all processes whose name contains the word "bash"
+for pid in /proc/*/status; do
+    current_pid=$(awk '/Pid:/{print $2}' "$pid")
+    process_name=$(awk '/Name:/{print $2}' "$pid")
+
+    # Check if the process name contains the word "bash"
+    if [[ "$process_name" == *"bash"* ]]; then
+        echo "$current_pid $process_name"
+    fi
+done
