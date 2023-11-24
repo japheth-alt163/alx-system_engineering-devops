@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Display header
+printf "%-10s %-6s %-6s %-8s %-8s %-8s %-8s %-6s %-6s %s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "START" "TIME COMMAND"
+
+# Loop through all processes
+while read -r line; do
+    # Display process information
+    printf "%-10s %6s %6s %8s %8s %8s %8s %6s %6s %s\n" $line
+done < <(ps aux --forest --no-headers)
