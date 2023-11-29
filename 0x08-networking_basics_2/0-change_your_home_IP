@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Check if the script is running in Docker
+if [ -f "/.dockerenv" ]; then
+  # Update /etc/hosts with new configurations
+  echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts
+  echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
+
+  echo "Host configurations updated successfully."
+
+  # Restart networking to apply changes
+  sudo service networking restart
+else
+  echo "This script is intended to run in a Docker container. Aborting."
+  exit 1
+fi
