@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Display listening ports with PID and program name
+
+echo "Active Internet connections (only servers)"
+echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+
+# Display listening TCP ports
+lsof -i -P -n | awk '$1 == "LISTEN" && $8 ~ /TCP/ {print "tcp6       0      0 "$9"                    *:*                  LISTEN      "$2}'
+
+# Display listening UDP ports
+lsof -i -P -n | awk '$1 == "LISTEN" && $8 ~ /UDP/ {print "udp6       0      0 "$9"                    *:*                                "$2}'
+
+# Display listening UNIX domain sockets
+lsof -U +c 0 | awk '$1 == "COMMAND" {next} {print $1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9}'
