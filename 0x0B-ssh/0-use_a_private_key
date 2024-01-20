@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Set the server IP address
+server_ip="8.8.8.8"
+
+# Set the full path to the private key file
+private_key_path="/home/sylvain/.ssh/school"
+
+# Use ssh with single-character flags to connect to the server
+ssh -i "$private_key_path" ubuntu@$server_ip
+
+# Print a message upon exiting the ssh session
+echo "Connection to $server_ip closed."
