@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-# Script to configure SSH client according to specified requirements
-
-# Specify the target SSH configuration file
-ssh_config_file="$HOME/.ssh/config"
 
 # Ensure the SSH configuration file exists
-touch "$ssh_config_file"
+touch ~/.ssh/config
 
-# Configure SSH to use the private key and disable password authentication
-echo -e "PasswordAuthentication no\nIdentityFile ~/.ssh/school" >> "$ssh_config_file"
-
-echo "SSH configuration has been updated."
+# Set the required options in the SSH configuration file
+echo "PasswordAuthentication no" >> ~/.ssh/config
+echo "IdentityFile ~/.ssh/school" >> ~/.ssh/config
