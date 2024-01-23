@@ -1,32 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# This script installs nginx on Ubuntu server and configures redirection
 
-# Check for root privileges
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root or with sudo."
-    exit 1
-fi
+# Install nginx
+sudo apt-get install -y nginx
+
+# Allow incoming connections on port 80 using UFW
+sudo ufw allow 'Nginx HTTP'
+
+# Create a simple "Hello World!" page
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
 
 # Define the redirection location
-redirect_location="https://www.youtube.com/watch?v=QH2-TGUlwu4"
+redirect_location="http://pronic.tech"
 
-# Create a new Nginx configuration file for redirection
-sudo bash -c "echo 'server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+# Add the redirection rule to Nginx configuration
+line="\\\trewrite ^/redirect_me $redirect_location permanent;"
+sudo sed -i "/server_name _;/a $line" /etc/nginx/sites-available/default
 
-    server_name _;
-
-    location /redirect_me {
-        return 301 $redirect_location;
-    }
-
-    root /var/www/html;
-    index index.html;
-
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
-}' > /etc/nginx/sites-available/default"
+# Check Nginx configuration syntax
+sudo nginx -t
 
 # Restart Nginx
 sudo service nginx restart
