@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# This script installs nginx on an Ubuntu server
+
+# Check for root privileges
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root or with sudo."
+    exit 1
+fi
+
+# Update and upgrade system packages
+sudo apt-get update -y && sudo apt-get upgrade -y
+
+# Install nginx
+sudo apt-get install -y nginx
+
+# Create a simple "Hello World!" page
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
+
+# Allow incoming connections on port 80 using UFW
+sudo ufw allow 'Nginx HTTP'
+
+# Restart Nginx service
+sudo service nginx restart
