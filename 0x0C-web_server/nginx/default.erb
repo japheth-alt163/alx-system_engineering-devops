@@ -1,0 +1,17 @@
+# /etc/nginx/sites-available/default
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    <%= scope.function_nginx__resource('location', '/redirect_me', { 'ensure' => 'present', 'location' => '^/redirect_me', 'vhost' => 'default', 'content' => 'return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;', 'require' => 'Class[Nginx]', }) %>
+}
