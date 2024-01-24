@@ -1,3 +1,18 @@
-#!/usr/bin/env/ bash
-#start apache2 inside docker
+#!/usr/bin/env bash
+# This script fixes Apache to return a page containing Hello Holberton
+
+# Install Apache if not already installed
+apt-get update
+apt-get install -y apache2
+
+# Start Apache
 service apache2 start
+
+# Create a simple HTML page
+echo "<html><head></head><body>Hello Holberton</body></html>" > /var/www/html/index.html
+
+# Display the Apache process to make sure it's running
+ps aux | grep apache2
+
+# Ensure the container keeps running
+tail -f /dev/null
