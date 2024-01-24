@@ -12,7 +12,7 @@ service apache2 start
 echo "<html><head></head><body>Hello Holberton</body></html>" > /var/www/html/index.html
 
 # Display the Apache process to make sure it's running
-ps aux | grep apache2
+pgrep apache2
 
 # Ensure the container keeps running
 tail -f /dev/null
