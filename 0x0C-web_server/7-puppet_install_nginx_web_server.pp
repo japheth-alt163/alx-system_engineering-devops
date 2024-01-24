@@ -1,44 +1,48 @@
-# nginx_config.pp
+# Install NginX
+# With puppet
 
-class { 'nginx':
-  ensure  => 'installed',
-  service => 'running',
+exec { 'apt-get-update':
+  command => '/usr/bin/apt-get update',
+}
+
+package { 'nginx':
+  ensure  => installed,
+  require => Exec['apt-get-update'],
+}
+
+file { '/var/www/html/index.html':
+  content => 'Hello World!',
   require => Package['nginx'],
 }
 
-file { '/var/www/html/index.nginx-debian.html':
-  content => '<!DOCTYPE html>
-              <html>
-              <head>
-                  <title>Hello World!</title>
-              </head>
-              <body>
-                  <h1>Hello World!</h1>
-              </body>
-              </html>',
-  require => Class['nginx'],
-}
-
 file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  source  => 'puppet:///modules/nginx/default',
+  ensure  => present,
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0644',
+  content => template('nginx/default.erb'),
+  require => Package['nginx'],
   notify  => Service['nginx'],
-  require => Class['nginx'],
 }
 
-# Create a symlink to enable the default site
 file { '/etc/nginx/sites-enabled/default':
-  ensure => link,
-  target => '/etc/nginx/sites-available/default',
+  ensure  => link,
+  target  => '/etc/nginx/sites-available/default',
   require => File['/etc/nginx/sites-available/default'],
+  notify  => Service['nginx'],
 }
 
-# Define a location block for the 301 redirect
-nginx::resource::location { '/redirect_me':
+service { 'nginx':
+  ensure  => running,
+  require => Package['nginx'],
+}
+
+# Add a redirect for /redirect_me
+nginx::resource::location { 'redirect_me':
+  location => '/redirect_me',
   ensure   => present,
-  location => '^/redirect_me',
-  vhost    => 'default',
-  content  => 'return 301 https://www.example.com;',
-  require  => Class['nginx'],
+  server   => 'default',
+  content  => 'rewrite ^ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
+  require  => Package['nginx'],
+  notify   => Service['nginx'],
 }
-
