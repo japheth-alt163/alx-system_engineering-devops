@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """
-Queries the Reddit API and returns the number of subscribers for a given subreddit
+Queries the Reddit API and returns the number.
 """
 
 import requests
+
 
 def number_of_subscribers(subreddit):
     """
@@ -22,6 +23,7 @@ def number_of_subscribers(subreddit):
     except Exception as e:
         print("Error:", e)
         return 0
+
 
 if __name__ == "__main__":
     subreddit = input("Enter the subreddit name: ")
