@@ -2,28 +2,31 @@ server {
     listen 80 default_server;
     listen [::]:80 default_server;
 
-    # Use IP of server as domain name
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
     server_name 54.208.34.196;
+    add_header X-served-By 470640web-01;
 
     # Serve /airbnb-onepage/ route on AirBnB_clone_v3
     location = /airbnb-onepage/ {
+        include proxy_params;
         proxy_pass http://127.0.0.1:5000/airbnb-onepage/;
+        try_files "$uri" "$uri/" =404;
+    
+    }
+    # New location block for /airbnb-dynamic/number_odd_or_even/
+    location /airbnb-dynamic/number_odd_or_even/ {
+        proxy_pass http://127.0.0.1:5001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Serve /number_odd_or_even/ route on AirBnB_clone_v2
-    location ~ /airbnb-dynamic/number_odd_or_even/(\d+)$ {
-        proxy_pass http://127.0.0.1:5001/number_odd_or_even/$1;
+    # Added location block for /api/
+    location /api/ {
+        proxy_pass http://127.0.0.1:5002/;
+        include proxy_params;
     }
-
-    # Define error page for 404 errors
-    error_page 404 /404.html;
-
-    # Handle requests to /404 internally
-    location /404 {
-        root /var/www/html;
-        internal;
-    }
-
-    # Define error log
-    error_log /var/log/nginx/error.log;
 }
